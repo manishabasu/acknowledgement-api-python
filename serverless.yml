@@ -1,0 +1,43 @@
+service: acknowledgement-api-python-new
+provider:
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+
+# Define custom IAM roles for the Lambda functions
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: arn:aws:dynamodb:us-east-1:509707933376:table/AcknowledgementTableNew
+
+functions:
+  getRequest:
+    handler: get_request.get_request
+    events:
+      - http:
+          path: requests/{request_id}
+          method: get
+
+  postAck:
+    handler: post_ack.post_ack
+    events:
+      - http:
+          path: requests/{request_id}
+          method: post
+
+resources:
+  Resources:
+    AcknowledgementTableNew:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: AcknowledgementTableNew
+        AttributeDefinitions:
+          - AttributeName: request_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: request_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5

@@ -1,0 +1,62 @@
+openapi: 3.1.0
+info:
+  title: Acknowledgment Service API
+  version: 1.0.0
+paths:
+  /requests/{request_id}:
+    get:
+      summary: Retrieve an existing request and acknowledgment status
+      parameters:
+        - in: path
+          name: request_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request found
+          content:
+            application/json:
+              example:
+                acknowledgment: true
+                result: Sample Result
+        '404':
+          description: Request not found
+          content:
+            application/json:
+              example:
+                error: Acknowledgment not received yet.
+    post:
+      summary: Accept a new acknowledgment and store it
+      parameters:
+        - in: path
+          name: request_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request_id:
+                  type: string
+                acknowledgment:
+                  type: boolean
+      responses:
+        '200':
+          description: Acknowledgment stored successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error: Missing request_id or acknowledgment in the request body
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                error: An error occurred while processing your request.
