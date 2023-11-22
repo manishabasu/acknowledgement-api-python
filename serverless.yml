@@ -1,3 +1,5 @@
+org: manishabasu
+app: acknowledgement-api-python-new
 service: acknowledgement-api-python-new
 provider:
   name: aws
@@ -23,7 +25,7 @@ functions:
     handler: post_ack.post_ack
     events:
       - http:
-          path: requests/{request_id}
+          path: requests/acknowledge
           method: post
 
 resources:
